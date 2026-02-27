@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Param Sharma — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f8f5f0;
+    --accent: #c8773a;
+    --accent2: #4a7c6f;
+    --muted: #6b6b7a;
+    --border: #ddd8d0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.7; }
+
+  /* ── Edit Banner ── */
+  #edit-banner {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--ink); color: #fff;
+    padding: 10px 24px; display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; transform: translateY(-100%); transition: transform .3s ease;
+  }
+  #edit-banner.active { transform: translateY(0); }
+  #edit-banner button { background: var(--accent); border: none; color: #fff; padding: 5px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .edit-toggle { position: fixed; bottom: 28px; right: 28px; z-index: 999; width: 52px; height: 52px; border-radius: 50%; background: var(--ink); color: #fff; border: none; font-size: 20px; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,.25); transition: transform .2s, background .2s; }
+  .edit-toggle:hover { transform: scale(1.1); background: var(--accent); }
+
+  /* ── Edit mode highlights ── */
+  body.edit-mode [data-editable] { outline: 2px dashed var(--accent); outline-offset: 2px; cursor: text; border-radius: 2px; }
+  body.edit-mode [data-href] { outline: 2px dashed #4a7c6f; outline-offset: 2px; border-radius: 2px; }
+  body.edit-mode .add-item-btn { display: inline-flex !important; }
+  .add-item-btn { display: none; align-items: center; gap: 6px; margin-top: 14px; background: none; border: 1.5px dashed var(--accent); color: var(--accent); padding: 7px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: background .2s; }
+  .add-item-btn:hover { background: rgba(200,119,58,.1); }
+
+  /* ── Nav ── */
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(248,245,240,.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; padding: 18px 0; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; gap: 24px; list-style: none; }
+  .nav-links a { font-size: 12.5px; font-weight: 500; letter-spacing: .05em; color: var(--muted); text-decoration: none; text-transform: uppercase; transition: color .2s; }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── Hero ── */
+  #hero { min-height: 92vh; padding: 0 5%; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 60px; max-width: 1200px; margin: 0 auto; animation: fadeUp .8s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:none; } }
+  .hero-text h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1.15; margin-bottom: 8px; }
+  .hero-text .tagline { font-size: 1.05rem; color: var(--accent); font-weight: 500; margin-bottom: 20px; }
+  .hero-text .bio { color: var(--muted); font-size: .97rem; max-width: 500px; margin-bottom: 32px; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 10px; }
+  .badge { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 24px; border: 1.5px solid var(--border); font-size: 13px; text-decoration: none; color: var(--ink); font-weight: 500; transition: border-color .2s, color .2s, transform .15s; white-space: nowrap; }
+  .badge:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .badge svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .hero-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px; box-shadow: 8px 8px 0 var(--border); }
+  .hero-card .avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent2), var(--accent)); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 2rem; color: #fff; }
+  .hero-card table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  .hero-card tr td { padding: 7px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .hero-card tr:last-child td { border-bottom: none; }
+  .hero-card td:first-child { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing:.05em; width: 38%; padding-top: 9px; }
+
+  /* ── Generic section ── */
+  section { padding: 90px 5%; max-width: 1200px; margin: 0 auto; }
+  section h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 8px; }
+  .section-line { width: 48px; height: 3px; background: var(--accent); margin-bottom: 48px; border-radius: 2px; }
+
+  /* ── Mentors ── */
+  .mentors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+  .mentor-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: transform .2s, box-shadow .2s; text-decoration: none; color: var(--ink); display: block; }
+  .mentor-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+  .mentor-role { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent2); background: rgba(74,124,111,.1); padding: 3px 10px; border-radius: 20px; margin-bottom: 14px; display: inline-block; font-weight: 500; }
+  .mentor-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+  .mentor-card .org { font-size: .85rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .mentor-card .desc { font-size: .84rem; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+  .mentor-links-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mentor-link-btn { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); text-decoration: none; color: var(--ink); transition: all .2s; font-weight: 500; display: inline-block; }
+  .mentor-link-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* ── Research ── */
+  .research-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 24px; }
+  .research-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: transform .2s, box-shadow .2s; }
+  .research-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+  .r-tag { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--accent2); background: rgba(74,124,111,.1); padding: 3px 10px; border-radius: 20px; margin-bottom: 14px; font-weight: 500; }
+  .research-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .research-card p { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── Publications ── */
+  .pub-list { display: flex; flex-direction: column; }
+  .pub-item { padding: 28px 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 44px 1fr; gap: 20px; align-items: start; }
+  .pub-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--border); font-weight: 700; line-height: 1; }
+  .pub-item h3 { font-size: .97rem; font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
+  .pub-item .pub-meta { font-size: .83rem; color: var(--muted); margin-bottom: 12px; }
+  .pub-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pub-link { font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); text-decoration: none; color: var(--ink); transition: all .2s; font-weight: 500; }
+  .pub-link:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .pub-note { font-size: .8rem; color: var(--accent); margin-top: 8px; }
+
+  /* ── Projects ── */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+  .project-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column; }
+  .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+  .project-header { height: 8px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .project-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+  .project-body h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .project-body p { font-size: .88rem; color: var(--muted); margin-bottom: 16px; line-height: 1.6; flex: 1; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .tech-tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--paper); border: 1px solid var(--border); color: var(--muted); }
+  .project-badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: rgba(200,119,58,.1); border: 1px solid rgba(200,119,58,.3); color: var(--accent); font-weight: 500; }
+  .project-links-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
+  .project-link { font-size: 13px; font-weight: 500; color: var(--accent); text-decoration: none; padding: 5px 14px; border: 1.5px solid rgba(200,119,58,.4); border-radius: 20px; transition: all .2s; }
+  .project-link:hover { background: var(--accent); color: #fff; }
+
+  /* ── Recognition ── */
+  .recognition-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .rec-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column; }
+  .rec-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+  .rec-icon { font-size: 2rem; margin-bottom: 12px; }
+  .rec-card h3 { font-size: .97rem; font-weight: 600; margin-bottom: 6px; }
+  .rec-card p { font-size: .85rem; color: var(--muted); margin-bottom: 16px; line-height: 1.6; flex: 1; }
+  .rec-link { font-size: 12px; color: #fff; font-weight: 500; text-decoration: none; background: var(--accent); padding: 5px 14px; border-radius: 20px; display: inline-block; transition: opacity .2s; align-self: flex-start; }
+  .rec-link:hover { opacity: .85; }
+
+  /* ── Contact ── */
+  #contact { background: var(--ink); color: var(--paper); border-radius: 24px; margin-bottom: 60px; }
+  #contact h2 { font-family: 'Playfair Display', serif; }
+  #contact .section-line { background: var(--accent); }
+  #contact > p { color: rgba(248,245,240,.7); max-width: 540px; margin-bottom: 36px; line-height: 1.7; }
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+  .contact-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 20px; text-decoration: none; color: var(--paper); transition: background .2s, transform .2s; display: block; }
+  .contact-card:hover { background: rgba(255,255,255,.14); transform: translateY(-3px); }
+  .c-label { font-size: 11px; color: rgba(248,245,240,.45); text-transform: uppercase; letter-spacing:.06em; margin-bottom: 5px; }
+  .c-val { font-size: .92rem; font-weight: 500; word-break: break-all; }
+
+  footer { text-align: center; padding: 28px 5%; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--border); }
+
+  /* ── Add section button ── */
+  .add-section-wrap { display: none; max-width: 1200px; margin: 0 auto 60px; padding: 0 5%; }
+  body.edit-mode .add-section-wrap { display: block; }
+  .add-section-wrap button { width: 100%; background: none; border: 2px dashed var(--accent); color: var(--accent); padding: 14px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background .2s; }
+  .add-section-wrap button:hover { background: rgba(200,119,58,.07); }
+
+  /* ── Responsive ── */
+  @media(max-width: 900px) { #hero { grid-template-columns: 1fr; min-height: auto; padding-top: 60px; padding-bottom: 60px; } .hero-card { display: none; } }
+  @media(max-width: 680px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- Edit Banner -->
+<div id="edit-banner">
+  <span>✏️ <strong>Edit Mode ON</strong> — Orange outline = click to edit text &nbsp;|&nbsp; Green outline = click to update URL</span>
+  <div style="display:flex;gap:10px;">
+    <button onclick="saveChanges()">💾 Save</button>
+    <button onclick="toggleEditMode()" style="background:rgba(255,255,255,.15);">✕ Exit</button>
+  </div>
+</div>
+<button class="edit-toggle" onclick="toggleEditMode()" title="Toggle Edit Mode">✏️</button>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">Param Sharma</a>
+  <ul class="nav-links">
+    <li><a href="#mentors">Mentors</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#recognition">Recognition</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<div id="hero">
+  <div class="hero-text">
+    <h1 data-editable="hero-name">Param Sharma</h1>
+    <p class="tagline" data-editable="hero-tagline">B.Tech CSE · AI/ML Researcher · Patent Holder · Multi-Conference Author &amp; Presenter</p>
+    <p class="bio" data-editable="hero-bio">Undergraduate researcher at Birla Institute of Technology, Mesra (Ranchi), specialising in deep learning, computer vision, and TinyML for edge deployment. As a lead author and presenter, I have published datasets on IEEE DataPort and Mendeley Data, hold an Indian patent, authored papers at WCAIAA 2026 (NFSU Goa) and MIND 2025, co-authored a CRC Press book chapter (under Taylor &amp; Francis journal review), and am currently working on a real-time deep-vision sports analytics system — all as an undergraduate.</p>
+    <div class="hero-badges">
+      <a class="badge" href="https://orcid.org/0009-0005-7308-6401" target="_blank" rel="noopener">
+        <!-- ORCID -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm-1.374 4.622c.446 0 .808.363.808.809s-.362.809-.808.809-.809-.363-.809-.809.363-.809.809-.809zm-.985 2.765h1.97v10.45h-1.97V7.387zm4.01 0h3.303c3.143 0 4.674 2.126 4.674 5.226 0 3.087-1.53 5.224-4.674 5.224h-3.303V7.387zm1.97 1.739v6.971h1.167c1.848 0 2.832-1.152 2.832-3.486 0-2.33-.984-3.485-2.832-3.485H15.62z"/></svg>
+        ORCID
+      </a>
+      <a class="badge" href="https://github.com/Param141" target="_blank" rel="noopener">
+        <!-- GitHub -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        GitHub
+      </a>
+      <a class="badge" href="https://www.linkedin.com/in/param-sharma-26949a2a3/" target="_blank" rel="noopener">
+        <!-- LinkedIn -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a class="badge" href="https://scholar.google.com/citations?user=YOUR_ID" target="_blank" rel="noopener" data-href="gs-badge" onclick="handleBadgeClick(event,'gs-badge')">
+        <!-- Scholar -->
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
+        Google Scholar
+      </a>
+      <a class="badge" href="/cdn-cgi/l/email-protection#ff8f9e8d9e928c979e8d929ec7cfcdbf98929e9693d19c9092">
+        <!-- Email -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+        Email
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <div class="avatar">PS</div>
+    <table>
+      <tr><td>Institution</td><td data-editable="aff">BIT Mesra, Ranchi, India</td></tr>
+      <tr><td>Department</td><td data-editable="dept">Computer Science &amp; Engineering</td></tr>
+      <tr><td>Degree</td><td data-editable="degree">B.Tech (CSE) — Undergraduate</td></tr>
+      <tr><td>Nationality</td><td data-editable="nat">Indian</td></tr>
+      <tr><td>Languages</td><td data-editable="langs">Hindi · English · German</td></tr>
+      <tr><td>ORCID</td><td><a href="https://orcid.org/0009-0005-7308-6401" target="_blank" style="color:var(--accent2);font-size:.85rem;text-decoration:none;">0009-0005-7308-6401</a></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════ MENTORS ═══════════════════════ -->
+<section id="mentors">
+  <h2>Research Mentors &amp; Supervisors</h2>
+  <div class="section-line"></div>
+  <div class="mentors-grid" id="mentors-grid">
+
+    <!-- Dr. Jitendra Goyal -->
+    <div class="mentor-card">
+      <span class="mentor-role">Academic Research Supervisor</span>
+      <h3>Dr. Jitendra Goyal</h3>
+      <p class="org">Assistant Professor, Dept. of CSE<br>Birla Institute of Technology, Mesra (Jaipur Extension)</p>
+      <p class="desc">PhD (CSE) from MNIT Jaipur · 8 years teaching experience · Research areas: Blockchain Technology, IoT Security, Information Security &amp; Cyber Forensics · IEEE &amp; IEEE Computer Society Member · PI on Seed Money project on Blockchain-based Academic Credentials</p>
+      <div class="mentor-links-row">
+        <a class="mentor-link-btn" href="https://bitmesra.ac.in/Show_profile/673954337A7372473235325A4F374949396A793953673D3D" target="_blank" rel="noopener">🏛️ BIT Mesra Profile</a>
+        <a class="mentor-link-btn" href="https://orcid.org/0000-0003-3147-8237" target="_blank" rel="noopener">🔗 ORCID</a>
+      </div>
+    </div>
+
+    <!-- Mr. Vikas Sharma -->
+    <div class="mentor-card">
+      <span class="mentor-role">Industry Internship Mentor</span>
+      <h3>Mr. Vikas Sharma</h3>
+      <p class="org">Founder &amp; Director, MaxBrain Technologies<br>Durgapura, Rajasthan, India</p>
+      <p class="desc">IT professional specialising in web development, digital marketing, and software engineering consultancy. Founded MaxBrain Technologies (est. April 2018), serving clients across WordPress development, eCommerce, and digital marketing strategies.</p>
+      <div class="mentor-links-row">
+        <a class="mentor-link-btn" href="https://themaxbrain.com/" target="_blank" rel="noopener">🌐 MaxBrain Technologies</a>
+        <a class="mentor-link-btn" href="https://orcid.org/0009-0009-4016-4441" target="_blank" rel="noopener">🔗 ORCID</a>
+        <a class="mentor-link-btn" href="https://scholar.google.com/citations?user=vikas-sharma-maxbrain" target="_blank" rel="noopener" data-href="vikas-scholar" onclick="handleBadgeClick(event,'vikas-scholar')">📚 Google Scholar</a>
+      </div>
+    </div>
+
+  </div>
+  <button class="add-item-btn" onclick="addMentorCard()">＋ Add Mentor / Supervisor</button>
+</section>
+
+<!-- ═══════════════════════ RESEARCH ═══════════════════════ -->
+<section id="research">
+  <h2>Research Interests</h2>
+  <div class="section-line"></div>
+  <div class="research-grid" id="research-grid">
+
+    <div class="research-card">
+      <span class="r-tag">Deep Learning</span>
+      <h3>Computer Vision &amp; Deep Learning</h3>
+      <p>Building CNN and transformer-based architectures for real-world image classification — including agricultural disease detection from leaf imagery, with a publicly released dataset on IEEE DataPort.</p>
+    </div>
+
+    <div class="research-card">
+      <span class="r-tag">TinyML / Edge AI</span>
+      <h3>Edge AI &amp; TinyML Deployment</h3>
+      <p>Designing lightweight, optimised deep learning models deployable on resource-constrained microcontrollers (Arduino, ESP32). Research published at WCAIAA 2026 (NFSU Goa) by SCRS.</p>
+    </div>
+
+    <div class="research-card">
+      <span class="r-tag">Mathematical ML</span>
+      <h3>Optimisation &amp; Model Generalisation</h3>
+      <p>Exploring the mathematical foundations of ML — loss landscape geometry, weight pruning, knowledge distillation, INT8 quantisation, and out-of-distribution generalisation strategies.</p>
+    </div>
+
+    <div class="research-card">
+      <span class="r-tag">Quant Finance</span>
+      <h3>Algorithmic Trading &amp; Quantitative Systems</h3>
+      <p>Data-driven decision modelling for algorithmic and high-frequency trading — statistical signal generation, backtesting frameworks, and risk-adjusted performance analysis.</p>
+    </div>
+
+  </div>
+  <button class="add-item-btn" onclick="addResearchCard()">＋ Add Research Interest</button>
+</section>
+
+<!-- ═══════════════════════ PUBLICATIONS ═══════════════════════ -->
+<section id="publications">
+  <h2>Publications, Datasets &amp; Patents</h2>
+  <div class="section-line"></div>
+  <div class="pub-list" id="pub-list">
+
+    <!-- Dataset -->
+    <div class="pub-item">
+      <div class="pub-num">01</div>
+      <div>
+        <h3 data-editable="p1-title">Preprocessed Indian Ridge Gourd Leaf Image Dataset for Healthy and Diseased (Leaf Minor Infestation, Mosaic Virus) Leaf Detection</h3>
+        <p class="pub-meta" data-editable="p1-meta">Param Sharma et al. · IEEE DataPort · Publicly Available Dataset · 9,000 preprocessed images across 3 classes · 2024</p>
+        <div class="pub-links">
+          <a class="pub-link" href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" rel="noopener">📦 IEEE DataPort</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conference Paper -->
+    <div class="pub-item">
+      <div class="pub-num">02</div>
+      <div>
+        <h3 data-editable="p2-title">TinyML-Based Lightweight Deep Learning Model for Human Activity Recognition on Edge Devices</h3>
+        <p class="pub-meta" data-editable="p2-meta">Param Sharma et al. · WCAIAA 2026 Conference · NFSU Goa · Organised by SCRS · 2026</p>
+        <div class="pub-links">
+          <a class="pub-link" href="https://github.com/Param141/Tiny_ML_on_HAR_Dataset" target="_blank" rel="noopener">💻 GitHub Repo</a>
+          <a class="pub-link" href="#" data-href="p2-doi" onclick="handleBadgeClick(event,'p2-doi')">📄 Paper / DOI — Add Link</a>
+        </div>
+        <p class="pub-note">🏛️ Presented at WCAIAA 2026 · National Forensic Sciences University, Goa · Conference proceedings link to be added once published</p>
+      </div>
+    </div>
+
+    <!-- Patent -->
+    <div class="pub-item">
+      <div class="pub-num">03</div>
+      <div>
+        <h3 data-editable="p3-title">Patent: AI-Assisted Method for Agricultural Leaf Disease Detection and Classification</h3>
+        <p class="pub-meta" data-editable="p3-meta">Param Sharma · Indian Patent · Filed &amp; Granted · 2024</p>
+        <div class="pub-links">
+          <a class="pub-link" href="https://drive.google.com/file/d/19HMa5gBVQE5k2602YoNBpCUs3kVo-eUV/view?usp=sharing" target="_blank" rel="noopener">🔖 View Patent Document</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIND 2025 Conference Paper -->
+    <div class="pub-item">
+      <div class="pub-num">04</div>
+      <div>
+        <h3 data-editable="p4-title">Conference Paper on Agricultural Leaf Disease Detection — MIND 2025</h3>
+        <p class="pub-meta" data-editable="p4-meta">Param Sharma (Main Author) · MIND 2025 Conference · 2025 · DOI / Proceedings link to be updated</p>
+        <div class="pub-links">
+          <a class="pub-link" href="#" data-href="p4-doi" onclick="handleBadgeClick(event,'p4-doi')">📄 Paper / DOI — Add Link</a>
+        </div>
+        <p class="pub-note">🏛️ Main author &amp; presenter · MIND 2025 Conference</p>
+      </div>
+    </div>
+
+    <!-- CRC Press Book Chapter -->
+    <div class="pub-item">
+      <div class="pub-num">05</div>
+      <div>
+        <h3 data-editable="p5-title">Book Chapter — CRC Press (Under Taylor &amp; Francis Journal Review)</h3>
+        <p class="pub-meta" data-editable="p5-meta">Param Sharma (Main Author) · CRC Press · Submitted for Taylor &amp; Francis Journal Review · 2025–2026</p>
+        <div class="pub-links">
+          <a class="pub-link" href="#" data-href="p5-link" onclick="handleBadgeClick(event,'p5-link')">📘 Link — Coming Soon</a>
+        </div>
+        <p class="pub-note">📖 Main author · Currently under peer review · Link will be updated upon acceptance</p>
+      </div>
+    </div>
+
+    <!-- Brinjal Dataset — Mendeley -->
+    <div class="pub-item">
+      <div class="pub-num">06</div>
+      <div>
+        <h3 data-editable="p6-title">Brinjal (Eggplant) Leaf Disease Image Dataset — Mendeley Data</h3>
+        <p class="pub-meta" data-editable="p6-meta">Param Sharma (Main Author) · Mendeley Data · Publicly Available Dataset · 2025</p>
+        <div class="pub-links">
+          <a class="pub-link" href="#" data-href="p6-mendeley" onclick="handleBadgeClick(event,'p6-mendeley')">📦 Mendeley Data — Add Link</a>
+        </div>
+        <p class="pub-note">🔗 Main author · Link to be updated shortly</p>
+      </div>
+    </div>
+
+    <!-- Brinjal Data in Brief Paper -->
+    <div class="pub-item">
+      <div class="pub-num">07</div>
+      <div>
+        <h3 data-editable="p7-title">Data in Brief Paper — Brinjal (Eggplant) Leaf Disease Dataset</h3>
+        <p class="pub-meta" data-editable="p7-meta">Param Sharma (Main Author) · Data in Brief · Elsevier · Under Review / In Press · 2025–2026</p>
+        <div class="pub-links">
+          <a class="pub-link" href="#" data-href="p7-dib" onclick="handleBadgeClick(event,'p7-dib')">📄 Paper Link — Coming Soon</a>
+        </div>
+        <p class="pub-note">📖 Main author · Link to be updated upon publication</p>
+      </div>
+    </div>
+
+    <!-- Tracking -->
+    <div class="pub-item">
+      <div class="pub-num">08</div>
+      <div>
+        <h3 data-editable="p8-title">More publications under review — track on ORCID &amp; Google Scholar</h3>
+        <p class="pub-meta" data-editable="p8-meta">Full citations will be added upon acceptance</p>
+        <div class="pub-links">
+          <a class="pub-link" href="https://orcid.org/0009-0005-7308-6401" target="_blank" rel="noopener">🔗 ORCID</a>
+          <a class="pub-link" href="https://scholar.google.com/citations?user=YOUR_ID" target="_blank" rel="noopener" data-href="p8-scholar" onclick="handleBadgeClick(event,'p8-scholar')">📚 Google Scholar</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="add-item-btn" onclick="addPublication()">＋ Add Publication</button>
+</section>
+
+<!-- ═══════════════════════ PROJECTS ═══════════════════════ -->
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="section-line"></div>
+  <div class="projects-grid" id="projects-grid">
+
+    <!-- TinyML / HAR -->
+    <div class="project-card">
+      <div class="project-header"></div>
+      <div class="project-body">
+        <h3>TinyML-Based Human Activity Recognition on Edge Devices</h3>
+        <p>Lightweight deep learning models (MobileNet1D, CNN+BiLSTM) for real-time HAR on smartphones and microcontrollers. MobileNet1D achieved 92.77% accuracy; quantised to ~1.4 MB with &lt;100ms inference latency and &lt;50mW power on Arduino/ESP32. Research resulted in a paper presented at WCAIAA 2026 (NFSU Goa).</p>
+        <div class="project-tags">
+          <span class="tech-tag">TensorFlow Lite</span>
+          <span class="tech-tag">PyTorch</span>
+          <span class="tech-tag">TinyML</span>
+          <span class="tech-tag">INT8 Quantisation</span>
+          <span class="tech-tag">Arduino</span>
+          <span class="tech-tag">ESP32</span>
+          <span class="project-badge">📜 Conference Paper — WCAIAA 2026</span>
+        </div>
+        <div class="project-links-row">
+          <a class="project-link" href="https://github.com/Param141/Tiny_ML_on_HAR_Dataset" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ridge Gourd -->
+    <div class="project-card">
+      <div class="project-header"></div>
+      <div class="project-body">
+        <h3>Ridge Gourd Leaf Disease Classifier</h3>
+        <p>End-to-end deep learning pipeline classifying ridge gourd leaves as Healthy, Leaf Minor Infested, or Mosaic Virus infected. A dataset of 9,000 preprocessed images was collected, augmented, and published publicly on IEEE DataPort for the global research community.</p>
+        <div class="project-tags">
+          <span class="tech-tag">PyTorch</span>
+          <span class="tech-tag">CNN</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">OpenCV</span>
+          <span class="project-badge">📦 IEEE DataPort Dataset</span>
+          <span class="project-badge">📜 Patent Granted</span>
+          <span class="project-badge">🏛️ MIND 2025 Conference Paper</span>
+        </div>
+        <div class="project-links-row">
+          <a class="project-link" href="https://github.com/Param141" target="_blank" rel="noopener">GitHub →</a>
+          <a class="project-link" href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" rel="noopener">IEEE DataPort →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deep Learning Fruit Classification -->
+    <div class="project-card">
+      <div class="project-header"></div>
+      <div class="project-body">
+        <h3>Deep Learning-Based Fruit Classification</h3>
+        <p>Deep learning model for automated fruit classification using convolutional neural networks. Explores preprocessing, augmentation strategies, and transfer learning to achieve robust classification across multiple fruit categories.</p>
+        <div class="project-tags">
+          <span class="tech-tag">PyTorch</span>
+          <span class="tech-tag">CNN</span>
+          <span class="tech-tag">Transfer Learning</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">OpenCV</span>
+        </div>
+        <div class="project-links-row">
+          <a class="project-link" href="https://github.com/Param141/Deep_Learning_Based_Fruit_Classification" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotify Clone -->
+    <div class="project-card">
+      <div class="project-header"></div>
+      <div class="project-body">
+        <h3>Spotify Clone — Full-Stack Web App</h3>
+        <p>A fully functional Spotify-inspired music streaming UI built as part of a web development project collection. Features a responsive player interface, playlist management UI, and music browsing layout closely mirroring the original Spotify experience.</p>
+        <div class="project-tags">
+          <span class="tech-tag">HTML</span>
+          <span class="tech-tag">CSS</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Responsive Design</span>
+        </div>
+        <div class="project-links-row">
+          <a class="project-link" href="https://github.com/Param141/Web_Development_Projects/tree/main/spotify_clone" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Project: Soccerlytics -->
+    <div class="project-card" style="border-color:rgba(200,119,58,.35);position:relative;">
+      <div style="position:absolute;top:16px;right:16px;background:rgba(200,119,58,.12);border:1px solid rgba(200,119,58,.4);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--accent);font-weight:600;letter-spacing:.04em;">⚡ ACTIVE</div>
+      <div class="project-header" style="background:linear-gradient(90deg,#c8773a,#e8955a,#c8773a);"></div>
+      <div class="project-body">
+        <h3>Real-Time Deep-Vision Football Analytics System</h3>
+        <p>Currently building a production-grade computer vision system for real-time football match analysis. The system performs multi-object tracking of players and the ball, computes live possession statistics, generates tactical heat maps, and reconstructs a 2D top-down tactical view from broadcast footage — all in real time using YOLO-based detection pipelines.</p>
+        <div class="project-tags">
+          <span class="tech-tag">YOLOv8</span>
+          <span class="tech-tag">PyTorch</span>
+          <span class="tech-tag">OpenCV</span>
+          <span class="tech-tag">Multi-Object Tracking</span>
+          <span class="tech-tag">Computer Vision</span>
+          <span class="tech-tag">Python</span>
+          <span class="project-badge" style="background:rgba(200,119,58,.15);border-color:rgba(200,119,58,.4);">🔭 Ongoing Research</span>
+        </div>
+        <div class="project-links-row">
+          <a class="project-link" href="https://github.com/Param141" target="_blank" rel="noopener">GitHub (Coming Soon) →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="add-item-btn" onclick="addProject()">＋ Add Project</button>
+</section>
+
+<!-- ═══════════════════════ RECOGNITION ═══════════════════════ -->
+<section id="recognition">
+  <h2>Recognition &amp; Media</h2>
+  <div class="section-line"></div>
+  <div class="recognition-grid" id="recognition-grid">
+
+    <div class="rec-card">
+      <div class="rec-icon">📰</div>
+      <h3>Punjab Kesari Newspaper</h3>
+      <p>Research work featured in Punjab Kesari, one of India's leading Hindi-language newspapers — recognising the contribution to agricultural AI research as an undergraduate student.</p>
+      <a class="rec-link" href="https://drive.google.com/file/d/1cpYztjJXZPUQX9gwtYN7P0q_kuQnHW21/view?usp=sharing" target="_blank" rel="noopener">View Clipping →</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon">🏛️</div>
+      <h3>WCAIAA 2026 Conference — NFSU Goa</h3>
+      <p>Research paper on TinyML-based Human Activity Recognition presented at the World Conference on AI Applications and Advancements (WCAIAA 2026) organised by SCRS at the National Forensic Sciences University, Goa.</p>
+      <a class="rec-link" href="https://github.com/Param141/Tiny_ML_on_HAR_Dataset" target="_blank" rel="noopener">View Project →</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon">📦</div>
+      <h3>IEEE DataPort — Public Dataset</h3>
+      <p>Agricultural leaf disease dataset (9,000 images, 3 classes) published and made freely available on IEEE DataPort, contributing open-access resources to the global AI research community.</p>
+      <a class="rec-link" href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" rel="noopener">View Dataset →</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon">📜</div>
+      <h3>Indian Patent — Granted</h3>
+      <p>Indian patent granted for an AI-assisted method for agricultural leaf disease detection and classification — a notable achievement for an undergraduate researcher in India.</p>
+      <a class="rec-link" href="https://drive.google.com/file/d/19HMa5gBVQE5k2602YoNBpCUs3kVo-eUV/view?usp=sharing" target="_blank" rel="noopener">View Patent →</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon">🎤</div>
+      <h3>MIND 2025 Conference — Main Author &amp; Presenter</h3>
+      <p>Main author and presenter at the MIND 2025 conference for research on agricultural leaf disease detection. Represented the work before an academic audience and contributed to proceedings.</p>
+      <a class="rec-link" href="#" data-href="rec-mind2025" onclick="handleBadgeClick(event,'rec-mind2025')">View Paper →</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon">📗</div>
+      <h3>CRC Press Book Chapter — Taylor &amp; Francis Review</h3>
+      <p>Main author of a book chapter published through CRC Press, currently under review for a Taylor &amp; Francis journal — an exceptional output for an undergraduate researcher.</p>
+      <a class="rec-link" href="#" data-href="rec-crc" onclick="handleBadgeClick(event,'rec-crc')">View Publication →</a>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-icon">🫐</div>
+      <h3>Mendeley Data — Brinjal Dataset</h3>
+      <p>Main author of a publicly available Brinjal (Eggplant) leaf disease image dataset on Mendeley Data, with an accompanying Data in Brief paper currently under review at Elsevier.</p>
+      <a class="rec-link" href="#" data-href="rec-mendeley" onclick="handleBadgeClick(event,'rec-mendeley')">Mendeley Dataset →</a>
+    </div>
+
+  </div>
+  <button class="add-item-btn" onclick="addRecognitionCard()">＋ Add Recognition / Award</button>
+</section>
+
+<!-- Add Custom Section -->
+<div class="add-section-wrap">
+  <button onclick="addCustomSection()">＋ Add a New Custom Section</button>
+</div>
+
+<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+<section id="contact">
+  <h2>Get in Touch</h2>
+  <div class="section-line"></div>
+  <p data-editable="contact-desc">I'm open to research collaborations, master's programme discussions (particularly German universities), internship opportunities, and connections with academics and industry professionals in AI/ML or quantitative finance.</p>
+  <div class="contact-grid" id="contact-grid">
+    <a class="contact-card" href="/cdn-cgi/l/email-protection#ff8f9e8d9e928c979e8d929ec7cfcdbf98929e9693d19c9092">
+      <div class="c-label">Email</div>
+      <div class="c-val"><span class="__cf_email__" data-cfemail="acdccddecdc1dfc4cddec1cd949c9eeccbc1cdc5c082cfc3c1">[email&#160;protected]</span></div>
+    </a>
+    <a class="contact-card" href="https://github.com/Param141" target="_blank" rel="noopener">
+      <div class="c-label">GitHub</div>
+      <div class="c-val">github.com/Param141</div>
+    </a>
+    <a class="contact-card" href="https://orcid.org/0009-0005-7308-6401" target="_blank" rel="noopener">
+      <div class="c-label">ORCID</div>
+      <div class="c-val">0009-0005-7308-6401</div>
+    </a>
+    <a class="contact-card" href="https://www.linkedin.com/in/param-sharma-26949a2a3/" target="_blank" rel="noopener">
+      <div class="c-label">LinkedIn</div>
+      <div class="c-val">Param Sharma</div>
+    </a>
+    <a class="contact-card" href="https://scholar.google.com/citations?user=YOUR_ID" target="_blank" rel="noopener" data-href="contact-scholar" onclick="handleBadgeClick(event,'contact-scholar')">
+      <div class="c-label">Google Scholar</div>
+      <div class="c-val">Param Sharma</div>
+    </a>
+  </div>
+  <button class="add-item-btn" style="border-color:rgba(255,255,255,.3);color:rgba(248,245,240,.7);" onclick="addContactCard()">＋ Add Contact</button>
+</section>
+
+<footer>
+  <p>© <span id="year"></span> Param Sharma &nbsp;·&nbsp; B.Tech CSE, Birla Institute of Technology, Mesra, Ranchi, India &nbsp;·&nbsp; <a href="https://orcid.org/0009-0005-7308-6401" target="_blank" style="color:var(--accent2);text-decoration:none;">ORCID: 0009-0005-7308-6401</a></p>
+</footer>
+
+<!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const DATA_KEY = 'portfolio_param_v3';
+let editMode = false;
+let savedData = {};
+
+function loadData() { try { savedData = JSON.parse(localStorage.getItem(DATA_KEY) || '{}'); } catch { savedData = {}; } }
+
+function applyData() {
+  document.querySelectorAll('[data-editable]').forEach(el => {
+    const k = el.getAttribute('data-editable');
+    if (savedData[k]) el.textContent = savedData[k];
+  });
+  document.querySelectorAll('[data-href]').forEach(el => {
+    const k = el.getAttribute('data-href');
+    if (savedData['href_' + k]) el.href = savedData['href_' + k];
+  });
+}
+
+function toggleEditMode() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  document.getElementById('edit-banner').classList.toggle('active', editMode);
+  document.querySelectorAll('[data-editable]').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+    if (editMode) el.addEventListener('blur', onTextBlur);
+    else el.removeEventListener('blur', onTextBlur);
+  });
+}
+
+function onTextBlur(e) { savedData[e.target.getAttribute('data-editable')] = e.target.textContent; }
+
+function handleBadgeClick(e, key) {
+  if (!editMode) return; // let normal click through if not editing
+  e.preventDefault();
+  const cur = (savedData['href_'+key] && savedData['href_'+key] !== window.location.href) ? savedData['href_'+key] : '';
+  const url = prompt('Paste the URL for "' + key + '":', cur);
+  if (url !== null && url.trim()) {
+    savedData['href_'+key] = url.trim();
+    e.currentTarget.href = url.trim();
+    showToast('🔗 URL updated — remember to Save!');
+  }
+}
+
+function saveChanges() {
+  document.querySelectorAll('[data-editable]').forEach(el => { savedData[el.getAttribute('data-editable')] = el.textContent; });
+  document.querySelectorAll('[data-href]').forEach(el => { const k = el.getAttribute('data-href'); if (el.href && el.href !== window.location.href) savedData['href_'+k] = el.href; });
+  const grids = { mentors:'mentors-grid', research:'research-grid', pub:'pub-list', projects:'projects-grid', recognition:'recognition-grid', contact:'contact-grid' };
+  Object.entries(grids).forEach(([k, id]) => { const el = document.getElementById(id); if (el) savedData['_html_'+k] = el.innerHTML; });
+  try { localStorage.setItem(DATA_KEY, JSON.stringify(savedData)); showToast('✅ All changes saved!'); }
+  catch(e) { showToast('❌ Save failed: ' + e.message); }
+}
+
+function showToast(msg) {
+  const t = document.createElement('div'); t.textContent = msg;
+  Object.assign(t.style, { position:'fixed', bottom:'96px', left:'50%', transform:'translateX(-50%)', background:'#1a1a2e', color:'#fff', padding:'10px 24px', borderRadius:'24px', fontSize:'14px', zIndex:'9999', boxShadow:'0 4px 20px rgba(0,0,0,.3)', transition:'opacity .4s', whiteSpace:'nowrap' });
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; setTimeout(() => t.remove(), 400); }, 2600);
+}
+
+/* ── Add helpers ── */
+let c = {r:20, p:20, pr:20, cc:20, m:20, rec:20, s:0};
+
+function addMentorCard() {
+  const id='m'+(++c.m);
+  const div = document.createElement('div'); div.className='mentor-card';
+  div.innerHTML=`<span class="mentor-role" data-editable="${id}-role" contenteditable="true">Role</span><h3 data-editable="${id}-name" contenteditable="true">Mentor Name</h3><p class="org" data-editable="${id}-org" contenteditable="true">Position, Institution</p><p class="desc" data-editable="${id}-desc" contenteditable="true">Description of their work and your collaboration.</p><div class="mentor-links-row"><a class="mentor-link-btn" href="#" data-href="${id}-link" onclick="handleBadgeClick(event,'${id}-link')">🔗 Profile (set URL)</a></div><button onclick="this.closest('.mentor-card').remove()" style="margin-top:12px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;">🗑 Remove</button>`;
+  document.getElementById('mentors-grid').appendChild(div);
+}
+function addResearchCard() {
+  const id='r'+(++c.r); const div=document.createElement('div'); div.className='research-card';
+  div.innerHTML=`<span class="r-tag" data-editable="${id}-tag" contenteditable="true">Area</span><h3 data-editable="${id}-title" contenteditable="true">Research Title</h3><p data-editable="${id}-desc" contenteditable="true">Describe this interest.</p><button onclick="this.closest('.research-card').remove()" style="margin-top:12px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;">🗑 Remove</button>`;
+  document.getElementById('research-grid').appendChild(div);
+}
+function addPublication() {
+  const list=document.getElementById('pub-list'); const num=list.querySelectorAll('.pub-item').length+1; const id='p'+(++c.p); const div=document.createElement('div'); div.className='pub-item';
+  div.innerHTML=`<div class="pub-num">${String(num).padStart(2,'0')}</div><div><h3 data-editable="${id}-title" contenteditable="true">Publication Title</h3><p class="pub-meta" data-editable="${id}-meta" contenteditable="true">Authors · Venue · Year · DOI</p><div class="pub-links"><a class="pub-link" href="#" data-href="${id}-paper" onclick="handleBadgeClick(event,'${id}-paper')">📄 Paper</a><a class="pub-link" href="#" data-href="${id}-code" onclick="handleBadgeClick(event,'${id}-code')">💻 Code</a></div><button onclick="this.closest('.pub-item').remove()" style="margin-top:10px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;">🗑 Remove</button></div>`;
+  list.appendChild(div);
+}
+function addProject() {
+  const id='pr'+(++c.pr); const card=document.createElement('div'); card.className='project-card';
+  card.innerHTML=`<div class="project-header"></div><div class="project-body"><h3 data-editable="${id}-title" contenteditable="true">Project Title</h3><p data-editable="${id}-desc" contenteditable="true">Describe your project.</p><div class="project-tags"><span class="tech-tag" data-editable="${id}-t1" contenteditable="true">Tech</span></div><div class="project-links-row"><a class="project-link" href="#" data-href="${id}-link" onclick="handleBadgeClick(event,'${id}-link')">View →</a></div><button onclick="this.closest('.project-card').remove()" style="margin-top:12px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;">🗑 Remove</button></div>`;
+  document.getElementById('projects-grid').appendChild(card);
+}
+function addRecognitionCard() {
+  const id='rec'+(++c.rec); const div=document.createElement('div'); div.className='rec-card';
+  div.innerHTML=`<div class="rec-icon" data-editable="${id}-icon" contenteditable="true">🏆</div><h3 data-editable="${id}-title" contenteditable="true">Recognition Title</h3><p data-editable="${id}-desc" contenteditable="true">Describe this achievement.</p><a class="rec-link" href="#" data-href="${id}-link" onclick="handleBadgeClick(event,'${id}-link')">View →</a><button onclick="this.closest('.rec-card').remove()" style="margin-top:12px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:12px;display:block;">🗑 Remove</button>`;
+  document.getElementById('recognition-grid').appendChild(div);
+}
+function addContactCard() {
+  const id='cc'+(++c.cc); const a=document.createElement('a'); a.className='contact-card'; a.href='#'; a.setAttribute('data-href',id+'-link'); a.onclick=e=>handleBadgeClick(e,id+'-link');
+  a.innerHTML=`<div class="c-label" data-editable="${id}-label" contenteditable="true">Platform</div><div class="c-val" data-editable="${id}-val" contenteditable="true">your-link</div>`;
+  document.getElementById('contact-grid').appendChild(a);
+}
+function addCustomSection() {
+  c.s++; const sid='sec-'+c.s; const s=document.createElement('section'); s.id=sid;
+  s.innerHTML=`<h2 data-editable="${sid}-h" contenteditable="true">New Section</h2><div class="section-line"></div><div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:28px;"><p data-editable="${sid}-body" contenteditable="true">Add your content here — awards, certifications, talks, teaching experience, etc.</p></div><button onclick="this.closest('section').remove()" style="margin-top:14px;background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;">🗑 Remove Section</button>`;
+  document.querySelector('#contact').before(s);
+  const li=document.createElement('li'); li.innerHTML=`<a href="#${sid}">New</a>`; document.querySelector('.nav-links').appendChild(li);
+}
+
+/* ── Init ── */
+document.getElementById('year').textContent = new Date().getFullYear();
+loadData();
+const gridMap = { mentors:'mentors-grid', resea
