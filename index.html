@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Param Sharma | AI/ML Researcher</title>
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0d1117',
+                        surface: '#161b22',
+                        accent: '#58a6ff',
+                        border: '#30363d'
+                    },
+                    animation: {
+                        'scroll': 'scroll 30s linear infinite',
+                        'scroll-reverse': 'scroll-reverse 30s linear infinite'
+                    },
+                    keyframes: {
+                        scroll: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
+                        'scroll-reverse': { '0%': { transform: 'translateX(-50%)' }, '100%': { transform: 'translateX(0)' } }
+                    },
+                    fontFamily: {
+                        figtree: ['"Segoe UI"', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            /* Arc Reactor Orange/White Theme */
+            --reactor-orange: #f97316;
+            --reactor-white: #ffffff;
+        }
+
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- ARC REACTOR BOOT SCREEN --- */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; transition: opacity 1s ease-out;
+        }
+
+        #start-btn {
+            padding: 12px 30px; font-size: 1.2rem; background: transparent; color: var(--reactor-orange);
+            border: 1px solid var(--reactor-orange); border-radius: 4px; cursor: pointer;
+            font-family: "Courier New", monospace; letter-spacing: 2px; transition: all 0.3s;
+        }
+        
+        #start-btn:hover { 
+            background: var(--reactor-orange); color: #000; box-shadow: 0 0 15px var(--reactor-orange); 
+        }
+
+        .arc-reactor {
+            width: 110px; height: 110px; border-radius: 50%; position: relative;
+            border: 3px solid var(--reactor-orange); 
+            box-shadow: 0 0 25px var(--reactor-orange), inset 0 0 20px var(--reactor-white);
+            display: flex; justify-content: center; align-items: center; margin-bottom: 40px;
+            animation: pulse 2s infinite alternate;
+        }
+        .arc-reactor .core { 
+            width: 55px; height: 55px; background-color: var(--reactor-white); border-radius: 50%; 
+            box-shadow: 0 0 50px var(--reactor-white), 0 0 20px var(--reactor-orange); 
+        }
+        .arc-reactor .ring { 
+            position: absolute; border: 2px dashed var(--reactor-orange); border-radius: 50%; 
+            animation: spin 3s linear infinite; opacity: 0.8;
+        }
+        .arc-reactor .ring:nth-child(2) { width: 80px; height: 80px; }
+        .arc-reactor .ring:nth-child(3) { width: 100px; height: 100px; animation-direction: reverse; animation-duration: 4s; }
+
+        .boot-text { font-family: "Courier New", Courier, monospace; color: var(--reactor-orange); font-size: 1rem; width: 100%; max-width: 400px; text-align: left; }
+        .boot-text .line { opacity: 0; margin-bottom: 8px; }
+        .boot-text .red { color: #ff3333; }
+        .boot-text .bright { font-size: 1.3rem; margin-top: 20px; text-shadow: 0 0 10px var(--reactor-orange); text-align: center; color: var(--reactor-white); }
+
+        @keyframes pulse { 0% { transform: scale(0.95); } 100% { transform: scale(1.05); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- MAIN APP --- */
+        #app { display: none; max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+        /* --- NAVIGATION --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 40px; }
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--text-color); }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active-link { color: var(--accent-color); }
+
+        /* --- SECTIONS --- */
+        .section-content { display: none; animation: fadeIn 0.4s; }
+        .section-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CUSTOM UI ELEMENTS --- */
+        .pill { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: rgba(88, 166, 255, 0.1); color: var(--accent-color); display: inline-block; margin-bottom: 10px; border: 1px solid rgba(88, 166, 255, 0.2); }
+        .home-section-title { font-size: 1.8rem; margin: 60px 0 30px 0; font-weight: bold; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        
+        .hero-image { width: 300px; height: 320px; border-radius: 24px; background-color: var(--card-bg); border: 1px solid var(--border-color); object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        
+        /* Contact Form */
+        .contact-container { background: var(--card-bg); padding: 30px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 60px;}
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); margin-bottom: 15px; }
+        .contact-form button { padding: 12px 24px; border: none; border-radius: 6px; background-color: var(--accent-color); color: white; font-weight: bold; cursor: pointer; }
+
+        /* Custom Project Card Badges */
+        .proj-badge { padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border-color); background: var(--bg-color); font-size: 0.75rem; color: #9ca3af; white-space: nowrap; }
+        .proj-badge-accent { border-color: rgba(249, 115, 22, 0.3); background: rgba(249, 115, 22, 0.05); color: #fb923c; }
+        .proj-badge-active { border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); color: #ef4444; }
+        .proj-link-btn { display: inline-flex; align-items: center; padding: 6px 16px; border: 1px solid var(--border-color); border-radius: 999px; font-size: 0.85rem; color: #d1d5db; transition: all 0.2s; background: var(--bg-color); }
+        .proj-link-btn:hover { border-color: var(--accent-color); color: white; }
+    </style>
+</head>
+<body class="bg-background text-gray-300">
+
+    <!-- ARC REACTOR BOOT SCREEN -->
+    <div id="boot-screen">
+        <button id="start-btn" onclick="startBootSequence()">POWER ON SYSTEM</button>
+        
+        <div id="reactor-container" style="display: none; flex-direction: column; align-items: center;">
+            <div class="arc-reactor">
+                <div class="core"></div>
+                <div class="ring"></div>
+                <div class="ring"></div>
+            </div>
+            <div class="boot-text" id="terminal-lines">
+                <div class="line">&gt; Powering arc reactor...</div>
+                <div class="line">&gt; Loading neural subsystems...</div>
+                <div class="line">&gt; Mounting memory architecture...</div>
+                <div class="line">&gt; Calibrating suit bay...</div>
+                <div class="line red">&gt; All systems nominal.</div>
+                <div class="line bright" id="welcome-text">Welcome back, sir.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app">
+        <nav>
+            <div class="logo">Param Sharma</div>
+            <div class="nav-links">
+                <a onclick="showSection('home')" id="nav-home" class="active-link">Home</a>
+                <a onclick="showSection('research')" id="nav-research">Research</a>
+                <a onclick="showSection('projects')" id="nav-projects">Projects</a>
+                <a href="CV.pdf" target="_blank" id="nav-resume">Resume</a>
+            </div>
+        </nav>
+
+        <!-- ============================================== -->
+        <!-- 1) HOME PAGE                                   -->
+        <!-- ============================================== -->
+        <section id="home" class="section-content active">
+            <!-- Hero -->
+            <div class="flex flex-col-reverse md:flex-row justify-between items-center gap-10 mb-10">
+                <div class="flex-1">
+                    <h1 class="text-5xl font-bold text-white mb-2">Param Sharma</h1>
+                    <h2 class="text-xl text-blue-400 mb-5">AI/ML Researcher · Patent Holder · Builder</h2>
+                    <div class="flex flex-wrap gap-3 mb-6">
+                        <span class="bg-surface border border-border px-3 py-1 rounded-full text-sm font-bold text-gray-200"><i class="fas fa-award mr-1"></i> Applied AI & RAG</span>
+                        <span class="bg-surface border border-border px-3 py-1 rounded-full text-sm font-bold text-gray-200"><i class="fas fa-database mr-1"></i> Algorithmic Trading</span>
+                        <span class="bg-surface border border-border px-3 py-1 rounded-full text-sm font-bold text-gray-200"><i class="fas fa-file-alt mr-1"></i> System Architecture</span>
+                        <span class="bg-surface border border-border px-3 py-1 rounded-full text-sm font-bold text-gray-200"><i class="fas fa-file-alt mr-1"></i> Maths</span>
+                    </div>
+                                        <p class="text-gray-400 text-[0.95rem] leading-relaxed mb-10">
+                        Product-focused AI/ML Engineer who ships fast. I turn complex algorithms into scalable products and obsess over the details that make systems robust. I’ve worked on computer vision, generative AI and RAG, algorithmic trading models, and high-performance backends. Mostly with Python, C++, PyTorch, or whatever gets the job done. </p>
+
+<div class="inline-flex items-center px-4 py-1.5 rounded-full border border-green-500/40 bg-green-500/10 text-green-400 text-sm shadow-[0_0_10px_rgba(34,197,94,0.1)]">
+                        <div class="w-2 h-2 rounded-full bg-green-500 mr-2 shadow-[0_0_8px_#22c55e]"></div>
+                        Open to Work: Full-Time, Freelance, or Collabs.&nbsp;
+                        <button onclick="document.querySelector('.section-content.active .contact-container').scrollIntoView({behavior: 'smooth'});" class="underline font-semibold hover:text-green-300 transition-colors ml-1">Let’s talk.</button>
+                    </div>
+                </div>
+                <div class="flex-shrink-0">
+                    <img src="Picture.jpeg" alt="Param Sharma" class="hero-image">
+                </div>
+            </div>
+
+            <!-- USER PROVIDED TAILWIND TECH STACK -->
+            <section class="mt-24 overflow-hidden w-full relative border-t border-b border-border py-10">
+                <div class="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-background to-transparent z-10"></div>
+                <div class="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-background to-transparent z-10"></div>
+                <h2 class="text-lg font-figtree font-light text-white mb-8 px-1 text-left">Technologies &amp; Tools</h2>
+                <div class="flex gap-4 w-max animate-scroll hover:[animation-play-state:paused] mb-4">
+                    <div class="flex gap-4">
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fab fa-python text-blue-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">Python</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-code text-blue-400 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">C++</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fab fa-java text-yellow-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">Java</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fab fa-r-project text-blue-300 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">R</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-brain text-orange-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">TensorFlow</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-fire text-red-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">PyTorch</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-eye text-gray-200 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">OpenCV</span>
+                        </div>
+                    </div>
+                    <!-- DUPLICATE FOR SCROLL -->
+                    <div class="flex gap-4">
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fab fa-python text-blue-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">Python</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-code text-blue-400 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">C++</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fab fa-java text-yellow-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">Java</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fab fa-r-project text-blue-300 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">R</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-brain text-orange-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">TensorFlow</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-fire text-red-500 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">PyTorch</span>
+                        </div>
+                        <div class="w-32 h-20 bg-surface border border-white/5 rounded-lg flex flex-col items-center justify-center gap-2 group hover:border-white/20 transition-colors">
+                            <i class="fas fa-eye text-gray-200 text-2xl"></i><span class="text-xs font-figtree text-neutral-500">OpenCV</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GitHub Contributions -->
+            <h2 class="home-section-title text-white">GitHub Contributions</h2>
+            <div class="bg-surface p-5 rounded-lg border border-border overflow-hidden">
+                <img src="https://ghchart.rshah.org/39d353/Param141" alt="Param141's Github chart" class="w-full" />
+            </div>
+
+            <!-- FEATURED PROJECTS (Summary for Home Page - Updated to 4 Cards) -->
+            <div class="mb-24 mt-16">
+                <div class="flex justify-between items-end mb-6 border-b border-border pb-4">
+                    <h2 class="text-2xl font-bold text-white tracking-tight">Featured Projects</h2>
+                    <button onclick="showSection('projects')" class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View All &rarr;</button>
+                </div>
+                <!-- Changed to a 2x2 grid for better display of 4 items -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Mini Card 1 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">TinyML HAR</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Lightweight deep learning models for real-time human activity recognition deployed on edge devices (Arduino/ESP32).</p>
+                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                    </div>
+                    <!-- Mini Card 2 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Ridge Gourd Classifier</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">End-to-end DL pipeline classifying plant diseases, featuring a custom 9,000-image dataset published on IEEE DataPort.</p>
+                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                    </div>
+                    <!-- Mini Card 3 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Real-Time Football Analytics</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Production-grade computer vision system utilizing YOLOv8 for live match analysis, tracking, and tactical heat maps.</p>
+                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                    </div>
+                    <!-- Mini Card 4 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Fruit Classification</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Deep learning model for automated fruit classification exploring preprocessing, augmentation, and transfer learning.</p>
+                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORE RESEARCH INTERESTS (Detailed 6-block layout for Home Page) -->
+            <div class="mb-24">
+                <div class="flex justify-between items-end mb-6 border-b border-border pb-4">
+                    <h2 class="text-2xl font-bold text-white tracking-tight">Core Research Interests</h2>
+                    <button onclick="showSection('research')" class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View Publications &rarr;</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Interest 1: CV / DL -->
+                    <div class="bg-surface border border-border rounded-xl p-6 hover:border-gray-500 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-[#60a5fa] text-[9px] font-bold uppercase tracking-wider mb-4 border border-blue-800/50">DEEP LEARNING</span>
+                        <h3 class="text-[1.1rem] font-bold text-white mb-3 leading-snug">Computer Vision & Deep Learning</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Building CNN and transformer-based architectures for real-world image classification — including agricultural disease detection from leaf imagery, with a publicly released dataset on IEEE DataPort.</p>
+                    </div>
+                    
+                    <!-- Interest 2: NLP -->
+                    <div class="bg-surface border border-border rounded-xl p-6 hover:border-gray-500 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-[#60a5fa] text-[9px] font-bold uppercase tracking-wider mb-4 border border-blue-800/50">NLP / GEN AI</span>
+                        <h3 class="text-[1.1rem] font-bold text-white mb-3 leading-snug">Natural Language Processing</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Exploring advanced natural language processing techniques and Large Language Models (LLMs). Currently researching optimization methods for efficient LLM fine-tuning and deployment.</p>
+                    </div>
+
+                    <!-- Interest 3: RL -->
+                    <div class="bg-surface border border-border rounded-xl p-6 hover:border-gray-500 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-[#60a5fa] text-[9px] font-bold uppercase tracking-wider mb-4 border border-blue-800/50">REINFORCEMENT LEARNING</span>
+                        <h3 class="text-[1.1rem] font-bold text-white mb-3 leading-snug">Reinforcement Learning</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Investigating the algorithmic foundations of sequential decision-making, training autonomous AI agents, and applying RL frameworks to optimize complex, dynamic, real-world systems.</p>
+                    </div>
+
+                    <!-- Interest 4: Math Opt -->
+                    <div class="bg-surface border border-border rounded-xl p-6 hover:border-gray-500 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-[#60a5fa] text-[9px] font-bold uppercase tracking-wider mb-4 border border-blue-800/50">MATHEMATICAL ML</span>
+                        <h3 class="text-[1.1rem] font-bold text-white mb-3 leading-snug">Mathematical Optimisations</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Exploring the mathematical foundations of ML — loss landscape geometry, non-convex optimization, stochastic processes, and gradient-free search methods for robust model performance.</p>
+                    </div>
+
+                    <!-- Interest 5: Quant Finance -->
+                    <div class="bg-surface border border-border rounded-xl p-6 hover:border-gray-500 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-[#60a5fa] text-[9px] font-bold uppercase tracking-wider mb-4 border border-blue-800/50">QUANT FINANCE</span>
+                        <h3 class="text-[1.1rem] font-bold text-white mb-3 leading-snug">Algorithmic Trading & Quant Systems</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Data-driven decision modelling for algorithmic and high-frequency trading — statistical signal generation, backtesting frameworks, LSTM architectures, and risk-adjusted performance analysis.</p>
+                    </div>
+
+                    <!-- Interest 6: Backend, DSA -->
+                    <div class="bg-surface border border-border rounded-xl p-6 hover:border-gray-500 transition-colors">
+                        <span class="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-[#60a5fa] text-[9px] font-bold uppercase tracking-wider mb-4 border border-blue-800/50">COMPUTER SCIENCE CORE</span>
+                        <h3 class="text-[1.1rem] font-bold text-white mb-3 leading-snug">Backend, System Design & DSA</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Developing strong foundations in data structures, algorithms, and backend system design. Focused on building efficient, scalable software and applying algorithmic thinking to computational challenges.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <!-- Contact Section -->
+<h2 class="home-section-title text-white">Get In Touch</h2>
+<div class="contact-container flex flex-col md:flex-row justify-between gap-10">
+    
+    <!-- Left Side: Socials -->
+    <div class="flex-1">
+        <h3 class="text-2xl font-bold text-white mb-4">Let's Connect</h3>
+        <p class="text-gray-400 mb-8">Currently open to new opportunities, research collaborations, and open-source contributions. Drop a message!</p>
+        <div class="flex gap-6 text-3xl">
+            <a href="https://github.com/Param141" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/param-sharma-26949a2a3/" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-linkedin"></i></a>
+            <a href="https://x.com/ParamSharm72289" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/delusionallyoptimistic2/?hl=en" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+    <!-- Right Side: Direct Email -->
+    <div class="flex-1 flex flex-col justify-center border-t md:border-t-0 md:border-l border-border pt-8 md:pt-0 md:pl-10">
+        <p class="text-gray-400 mb-3 font-medium uppercase tracking-wider text-sm">Email Me Directly</p>
+        
+        <a href="mailto:paramsharma802@gmail.com" class="text-2xl md:text-3xl font-bold text-white hover:text-blue-400 transition-colors break-words">
+            paramsharma802@gmail.com
+        </a>
+        
+        <a href="mailto:paramsharma802@gmail.com" class="mt-6 w-max bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-3 px-6 rounded transition-colors text-sm flex items-center shadow-lg shadow-blue-500/20">
+            <i class="fas fa-paper-plane mr-2"></i> Open Email App
+        </a>
+    </div>
+    
+</div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- 2) RESEARCH PAGE (USER PROVIDED HTML)          -->
+        <!-- ============================================== -->
+        <section id="research" class="section-content">
+            
+            <!-- SECTION A: MENTORS & SUPERVISORS -->
+            <div class="mb-20">
+                <h2 class="text-3xl font-bold text-white mb-2">Research Mentors & Supervisors</h2>
+                <p class="text-gray-400 mb-10 pb-4 border-b border-border">A dedicated overview of the academic and industry experts guiding my research journey.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Mentor 1 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl flex flex-col hover:border-gray-500 transition-colors">
+                        <span class="pill w-max bg-green-900/20 text-green-400 border-green-800/50">ACADEMIC RESEARCH SUPERVISOR</span>
+                        <h3 class="text-xl font-bold text-white mt-3 mb-1">Dr. Jitendra Goyal</h3>
+                        <p class="text-sm text-gray-300 font-medium mb-4">Assistant Professor, Dept. of CSE<br>Birla Institute of Technology, Mesra (Jaipur Extension)</p>
+                        <p class="text-sm text-gray-400 mb-6 flex-1 leading-relaxed">PhD (CSE) from MNIT Jaipur · 8 years teaching experience · Research areas: Blockchain Technology, IoT Security, Information Security & Cyber Forensics · IEEE & IEEE Computer Society Member · PI on Seed Money project on Blockchain-based Academic Credentials</p>
+                        <div class="flex gap-2">
+                            <a href="https://bitmesra.ac.in/Show_profile/673954337A7372473235325A4F374949396A793953673D3D"
+target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-university mr-1"></i> BIT Mesra Profile</a>
+                            <a href="https://orcid.org/0000-0003-3147-8237" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-link mr-1"></i> ORCID</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mentor 2 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl flex flex-col hover:border-gray-500 transition-colors">
+                        <span class="pill w-max bg-blue-900/20 text-blue-400 border-blue-800/50">INDUSTRY INTERNSHIP MENTOR</span>
+                        <h3 class="text-xl font-bold text-white mt-3 mb-1">Mr. Vikas Sharma</h3>
+                        <p class="text-sm text-gray-300 font-medium mb-4">Founder & Director, MaxBrain Technologies<br>Gopalpura, Rajasthan, India</p>
+                        <p class="text-sm text-gray-400 mb-6 flex-1 leading-relaxed">Vikas Sharma is an engineering consultant and researcher with over 8 years of expertise in computational modeling. An alumnus of MNIT Jaipur, he specializes in bridging engineering principles with modern AI/ML applications. As a research mentor, he has overseen the development of multiple SOTA projects, including TinyML optimization, hybrid DL architectures, and industrial patents. With a prolific publication record in IEEE and Elsevier, he provides the academic oversight necessary to transition theoretical research into scalable, real-world solutions.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="https://maxbraintech.com/" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-globe mr-1"></i> MaxBrain Technologies</button>
+                            <a href="https://orcid.org/0009-0009-4016-4441" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-link mr-1"></i> ORCID</a>
+                            <a href="https://scholar.google.com/citations?user=9TgUIFkAAAAJ&hl=en" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fab fa-google mr-1"></i> Google Scholar</a>
+                        </div>
+                    </div>
+
+                    <!-- Mentor 3 -->
+                    <div class="bg-surface border border-border p-6 rounded-xl flex flex-col hover:border-gray-500 transition-colors">
+                        <span class="pill w-max bg-purple-900/20 text-purple-400 border-purple-800/50">BACHELOR THESIS SUPERVISOR</span>
+                        <h3 class="text-xl font-bold text-white mt-3 mb-1">Dr. Pankaj Gupta</h3>
+                        <p class="text-sm text-gray-300 font-medium mb-4">Assistant Professor, Dept. of CSE<br>Birla Institute of Technology, Mesra (Jaipur Extension)</p>
+                        <p class="text-sm text-gray-400 mb-6 flex-1 leading-relaxed">PhD in Computer Science and Engineering from BIT Mesra with over 19 years of rich academic teaching and research mentorship experience. A prolific researcher with over 20 peer-reviewed publications indexed across Scopus, ESCI, and DBLP, he actively guides doctoral scholars and serves as a technical reviewer for leading international journals, including Bentham Science and IGI Global. His core research expertise lies across Data Science, Machine Learning, and complex Data Mining architectures. He provided the formal academic oversight and core methodology guidance for my Bachelor's Thesis on hybrid transformer-optimizer frameworks.</p>
+                        <div class="flex gap-2">
+                            <a href="https://bitmesra.ac.in/Show_profile/39534A487935736275426E6D46695446736877527A413D3D" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-university mr-1"></i> BIT Mesra Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION B: PUBLICATIONS, DATASETS & PATENTS -->
+            <div class="mb-20">
+                <h2 class="text-3xl font-bold text-white mb-2">Publications, Datasets & Patents</h2>
+                <div class="border-b border-border w-16 mb-10 border-t-2 border-orange-500 pt-1"></div>
+
+                <div class="flex flex-col gap-10">
+                    
+                    <!-- Item 01 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">01</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Preprocessed Indian Ridge Gourd Leaf Image Dataset for Healthy and Diseased Leaf Detection</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma et al. · IEEE DataPort · Publicly Available Dataset · 9,000 preprocessed images across 3 classes · 2025</p>
+                            <a href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fas fa-database mr-2 text-orange-400"></i> IEEE DataPort</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 02 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">02</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">TinyML-Based Lightweight Deep Learning Model for Human Activity Recognition on Edge Devices</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma et al. · WCAIAA 2026 Conference · NFSU Goa · Organised by SCRS · 2026</p>
+                            <div class="flex gap-3 mb-4">
+                                <a href="https://github.com/Param141/Tiny_ML_on_HAR_Dataset" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fab fa-github mr-2 text-blue-400"></i> GitHub Repo</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 03 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">03</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Patent: AI-Assisted Method for Agricultural Leaf Disease Detection and Classification</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma · Indian Patent · Filed & Granted · 2025</p>
+                            <a href="https://github.com/Param141/Param141/blob/main/certificates/Design%20Certificate%20476293-001.pdf" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fas fa-scroll mr-2 text-red-400"></i> View Patent Document</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 04 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">04</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Conference Paper on Agricultural Leaf Disease Detection — MIND 2025</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma · MIND 2025 Conference · 2025 · DOI / Proceedings link to be updated (Currently in Press)</p>
+                            <a href="https://drive.google.com/file/d/1YNM-5K7Qe7lOrSw79FjJ3-zhg-msGp91/view" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fas fa-certificate mr-2 text-gray-400"></i> Certificate Link</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 05 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">05</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Journal Paper — Discover Artificial Intelligence (Under Review)</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma (Main Author) · Discover Artificial Intelligence (Springer) · Submitted for Peer Review · 2026</p>
+                            <button class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fas fa-link mr-2 text-blue-400"></i> Link — Coming Soon</button>
+                            <p class="text-xs text-orange-400 flex items-start gap-2 leading-relaxed"><i class="fas fa-book-open mt-0.5"></i> Main author · Currently under peer review. This comprehensive work delivers a systematic and bibliometric analysis mapping the architectural evolution, optimization trends, and deployment landscapes of deep learning models addressing complex agricultural challenges.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 06 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">06</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Brinjal (Eggplant) Leaf Disease Image Dataset — Mendeley Data</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma (Main Author) · Mendeley Data · Publicly Available Dataset · 2026</p>
+                            <a href="https://data.mendeley.com/datasets/c39p3k87g2/2" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fas fa-cube mr-2 text-orange-600"></i> Mendeley Data</a>
+                            <p class="text-xs text-gray-400 flex items-start gap-2"><i class="fas fa-pen mt-0.5"></i> Main author of dataset and data in brief paper for this dataset</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 07 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">07</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Data in Brief Paper — Brinjal (Eggplant) Leaf Disease Dataset</h3>
+                            <p class="text-sm text-gray-400 mb-4">Param Sharma (Main Author) · Data in Brief · Elsevier · Under Review / In Press</p>
+                            <button class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fas fa-file-alt mr-2 text-gray-400"></i> Paper Link — Coming Soon</button>
+                            <p class="text-xs text-gray-400 flex items-start gap-2"><i class="fas fa-info-circle mt-0.5"></i> Main author · Link to be updated upon publication</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 08 -->
+                    <div class="flex gap-6 border-b border-border pb-10">
+                        <div class="text-4xl font-bold text-gray-700 select-none">08</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">Mobile Application — Fasal Saathi (Google Play)</h3>
+                            <p class="text-sm text-gray-400 mb-4">Android App · Live on Play Store · 2026</p>
+                            <a href="https://play.google.com/store/apps/details?id=com.param.finddiseaseai" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fab fa-google-play mr-2 text-blue-500"></i> Google Play Store</a>
+                            <p class="text-xs text-gray-400 flex items-start gap-2"><i class="fas fa-mobile-alt mt-0.5"></i> Main author · Mobile application for crop disease detection and farmer support, integrating machine learning models and real-time data collection.</p>
+                        </div>
+                    </div>
+
+                    <!-- Item 09 -->
+                    <div class="flex gap-6 pb-4">
+                        <div class="text-4xl font-bold text-gray-700 select-none">09</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-white mb-2">More publications under review — track on ORCID & Google Scholar</h3>
+                            <p class="text-sm text-gray-400 mb-4">Full citations will be added upon acceptance</p>
+                            <div class="flex gap-3">
+                                <a href="https://orcid.org/0009-0005-7308-6401" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fas fa-link mr-2"></i> ORCID</a>
+                                <a href="https://scholar.google.com/citations?user=YOUR_ID&user=2Omc3a8AAAAJ" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fab fa-google mr-2 text-green-500"></i> Google Scholar</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SECTION C: RECOGNITION & MEDIA -->
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-white mb-2">Recognition & Media</h2>
+                <div class="border-b border-border w-16 mb-10 border-t-2 border-orange-500 pt-1"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Recog 1 -->
+                    <div class="bg-surface border border-border p-8 rounded-xl flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                        <i class="fas fa-newspaper text-3xl text-gray-400 mb-5"></i>
+                        <h3 class="text-lg font-bold text-white mb-3">Punjab Kesari Newspaper</h3>
+                        <p class="text-sm text-gray-400 mb-8 flex-1 leading-relaxed">Research work featured in Punjab Kesari, one of India's leading Hindi-language newspapers — recognising the contribution to agricultural AI research as an undergraduate student.</p>
+                        <a href="https://drive.google.com/file/d/1cpYztjJXZPUQX9gwtYN7P0q_kuQnHW21/view" target="_blank" class="self-start bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-5 rounded-full text-xs transition-colors">View Clipping &rarr;</a>
+                    </div>
+
+                    <!-- Recog 2 -->
+                    <div class="bg-surface border border-border p-8 rounded-xl flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                        <i class="fas fa-university text-3xl text-gray-400 mb-5"></i>
+                        <h3 class="text-lg font-bold text-white mb-3">WCAIAA 2026 Conference — NFSU Goa</h3>
+                        <p class="text-sm text-gray-400 mb-8 flex-1 leading-relaxed">Research paper on TinyML-based Human Activity Recognition presented at the World Conference on AI Applications and Advancements (WCAIAA 2026).</p>
+                        <button class="self-start bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-5 rounded-full text-xs transition-colors">View Project &rarr;</button>
+                    </div>
+
+                    <!-- Recog 3 -->
+                    <div class="bg-surface border border-border p-8 rounded-xl flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                        <i class="fas fa-box-open text-3xl text-orange-400 mb-5"></i>
+                        <h3 class="text-lg font-bold text-white mb-3">IEEE DataPort — Public Dataset</h3>
+                        <p class="text-sm text-gray-400 mb-8 flex-1 leading-relaxed">Agricultural leaf disease dataset (9,000 images, 3 classes) published and made freely available on IEEE DataPort.</p>
+                        <a href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" class="self-start bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-5 rounded-full text-xs transition-colors">View Dataset &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- 3) PROJECTS PAGE                               -->
+        <!-- ============================================== -->
+        <section id="projects" class="section-content">
+            <h2 class="text-3xl font-bold text-white mb-10">Projects</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Project 1 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-500"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">TinyML-Based Human Activity Recognition on Edge Devices</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        Lightweight deep learning models (MobileNet1D, CNN+BiLSTM) for real-time HAR on smartphones and microcontrollers. MobileNet1D achieved 92.77% accuracy; quantised to ~1.4 MB with &lt;100ms inference latency and &lt;50mW power on Arduino/ESP32. Research resulted in a paper presented at WCAIAA 2026 (NFSU Goa).
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">TensorFlow Lite</span>
+                        <span class="proj-badge">PyTorch</span>
+                        <span class="proj-badge">TinyML</span>
+                        <span class="proj-badge">INT8 Quantisation</span>
+                        <span class="proj-badge">Arduino</span>
+                        <span class="proj-badge">ESP32</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-scroll mr-1"></i> Conference Paper — WCAIAA 2026</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://github.com/Param141/Tiny_ML_on_HAR_Dataset" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-600"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Ridge Gourd Leaf Disease Classifier</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        End-to-end deep learning pipeline classifying ridge gourd leaves as Healthy, Leaf Minor Infested, or Mosaic Virus infected. A dataset of 9,000 preprocessed images was collected, augmented, and published publicly on IEEE DataPort for the global research community.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">PyTorch</span>
+                        <span class="proj-badge">CNN</span>
+                        <span class="proj-badge">Python</span>
+                        <span class="proj-badge">OpenCV</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-database mr-1"></i> IEEE DataPort Dataset</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-award mr-1"></i> Patent Granted</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-university mr-1"></i> MIND 2025 Conference Paper</span>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <a href="https://github.com/Param141/Machine_Learning_Agriculture_Project" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
+                        <a href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" class="proj-link-btn">IEEE DataPort &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-600"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Deep Learning-Based Fruit Classification</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        Deep learning model for automated fruit classification using convolutional neural networks. Explores preprocessing, augmentation strategies, and transfer learning to achieve robust classification across multiple fruit categories.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">PyTorch</span>
+                        <span class="proj-badge">CNN</span>
+                        <span class="proj-badge">Transfer Learning</span>
+                        <span class="proj-badge">Python</span>
+                        <span class="proj-badge">OpenCV</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://github.com/Param141/Deep_Learning_Based_Fruit_Classification" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-700"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Spotify Clone — Full-Stack Web App</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        A fully functional Spotify-inspired music streaming UI built as part of a web development project collection. Features a responsive player interface, playlist management UI, and music browsing layout closely mirroring the original Spotify experience.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">HTML</span>
+                        <span class="proj-badge">CSS</span>
+                        <span class="proj-badge">JavaScript</span>
+                        <span class="proj-badge">Responsive Design</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://github.com/Param141/Web_Development_Projects/tree/main/spotify_clone" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-400"></div>
+                    
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold text-white pr-4">Real-Time Deep-Vision Football Analytics System</h3>
+                        <span class="proj-badge proj-badge-active"><i class="fas fa-bolt mr-1"></i> ACTIVE</span>
+                    </div>
+                    
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        Currently building a production-grade computer vision system for real-time football match analysis. The system performs multi-object tracking of players and the ball, computes live possession statistics, generates tactical heat maps, and reconstructs a 2D top-down tactical view from broadcast footage — all in real time using YOLO-based detection pipelines.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">YOLOv8</span>
+                        <span class="proj-badge">PyTorch</span>
+                        <span class="proj-badge">OpenCV</span>
+                        <span class="proj-badge">Multi-Object Tracking</span>
+                        <span class="proj-badge">Computer Vision</span>
+                        <span class="proj-badge">Python</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-flask mr-1"></i> Ongoing Research</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://github.com/Param141/Soccerlytics-Advance-Football-Video-Analysis-System" target="_blank" class="proj-link-btn opacity-70 cursor-not-allowed">GitHub &rarr;</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // --- BOOT SEQUENCE TRIGGERED BY CLICK (Required by Browsers) ---
+        function startBootSequence() {
+            // 1. Hide button, show reactor
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('reactor-container').style.display = 'flex';
+
+            // 2. Play Reactor Sound
+            try {
+                let reactorAudio = new Audio('Reactor.mp3');
+                reactorAudio.volume = 0.9; 
+                reactorAudio.play();
+            } catch(e) { console.log(e); }
+
+            // 3. Start Terminal Text Animation
+            const lines = document.querySelectorAll('.boot-text .line');
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    line.style.opacity = '1';
+                    
+                    if(index === lines.length - 1) {
+                        // 4. Play Jarvis Voice
+                        try {
+                            let jarvisAudio = new Audio('Jarvis.mp3');
+                            jarvisAudio.volume = 1.0;
+                            jarvisAudio.play();
+                        } catch(e) { console.log(e); }
+                        
+                        // 5. Transition to main app
+                        setTimeout(() => {
+                            document.getElementById('boot-screen').style.opacity = '0';
+                            setTimeout(() => {
+                                document.getElementById('boot-screen').style.display = 'none';
+                                document.getElementById('app').style.display = 'block';
+                            }, 1000);
+                        }, 2500); 
+                    }
+                }, index * 500); 
+            });
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active-link');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Do not highlight 'Resume' as active since it is an external link handling PDF
+            if(sectionId !== 'resume') {
+                document.getElementById('nav-' + sectionId).classList.add('active-link');
+            }
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
