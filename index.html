@@ -41,58 +41,12 @@
             --accent-color: #58a6ff;
             --card-bg: #161b22;
             --border-color: #30363d;
-            /* Arc Reactor Orange/White Theme */
-            --reactor-orange: #f97316;
-            --reactor-white: #ffffff;
         }
 
         body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; overflow-x: hidden; }
 
-        /* --- ARC REACTOR BOOT SCREEN --- */
-        #boot-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000; z-index: 9999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; transition: opacity 1s ease-out;
-        }
-
-        #start-btn {
-            padding: 12px 30px; font-size: 1.2rem; background: transparent; color: var(--reactor-orange);
-            border: 1px solid var(--reactor-orange); border-radius: 4px; cursor: pointer;
-            font-family: "Courier New", monospace; letter-spacing: 2px; transition: all 0.3s;
-        }
-        
-        #start-btn:hover { 
-            background: var(--reactor-orange); color: #000; box-shadow: 0 0 15px var(--reactor-orange); 
-        }
-
-        .arc-reactor {
-            width: 110px; height: 110px; border-radius: 50%; position: relative;
-            border: 3px solid var(--reactor-orange); 
-            box-shadow: 0 0 25px var(--reactor-orange), inset 0 0 20px var(--reactor-white);
-            display: flex; justify-content: center; align-items: center; margin-bottom: 40px;
-            animation: pulse 2s infinite alternate;
-        }
-        .arc-reactor .core { 
-            width: 55px; height: 55px; background-color: var(--reactor-white); border-radius: 50%; 
-            box-shadow: 0 0 50px var(--reactor-white), 0 0 20px var(--reactor-orange); 
-        }
-        .arc-reactor .ring { 
-            position: absolute; border: 2px dashed var(--reactor-orange); border-radius: 50%; 
-            animation: spin 3s linear infinite; opacity: 0.8;
-        }
-        .arc-reactor .ring:nth-child(2) { width: 80px; height: 80px; }
-        .arc-reactor .ring:nth-child(3) { width: 100px; height: 100px; animation-direction: reverse; animation-duration: 4s; }
-
-        .boot-text { font-family: "Courier New", Courier, monospace; color: var(--reactor-orange); font-size: 1rem; width: 100%; max-width: 400px; text-align: left; }
-        .boot-text .line { opacity: 0; margin-bottom: 8px; }
-        .boot-text .red { color: #ff3333; }
-        .boot-text .bright { font-size: 1.3rem; margin-top: 20px; text-shadow: 0 0 10px var(--reactor-orange); text-align: center; color: var(--reactor-white); }
-
-        @keyframes pulse { 0% { transform: scale(0.95); } 100% { transform: scale(1.05); } }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
         /* --- MAIN APP --- */
-        #app { display: none; max-width: 1100px; margin: 0 auto; padding: 20px; }
+        #app { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
         /* --- NAVIGATION --- */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 40px; }
@@ -126,27 +80,6 @@
     </style>
 </head>
 <body class="bg-background text-gray-300">
-
-    <!-- ARC REACTOR BOOT SCREEN -->
-    <div id="boot-screen">
-        <button id="start-btn" onclick="startBootSequence()">POWER ON SYSTEM</button>
-        
-        <div id="reactor-container" style="display: none; flex-direction: column; align-items: center;">
-            <div class="arc-reactor">
-                <div class="core"></div>
-                <div class="ring"></div>
-                <div class="ring"></div>
-            </div>
-            <div class="boot-text" id="terminal-lines">
-                <div class="line">&gt; Powering arc reactor...</div>
-                <div class="line">&gt; Loading neural subsystems...</div>
-                <div class="line">&gt; Mounting memory architecture...</div>
-                <div class="line">&gt; Calibrating suit bay...</div>
-                <div class="line red">&gt; All systems nominal.</div>
-                <div class="line bright" id="welcome-text">Welcome back, sir.</div>
-            </div>
-        </div>
-    </div>
 
     <!-- MAIN APP -->
     <div id="app">
@@ -251,39 +184,42 @@
                 <img src="https://ghchart.rshah.org/39d353/Param141" alt="Param141's Github chart" class="w-full" />
             </div>
 
-            <!-- FEATURED PROJECTS (Summary for Home Page - Updated to 4 Cards) -->
+          <!-- FEATURED PROJECTS (Summary for Home Page - Updated to 4 Cards) -->
             <div class="mb-24 mt-16">
                 <div class="flex justify-between items-end mb-6 border-b border-border pb-4">
                     <h2 class="text-2xl font-bold text-white tracking-tight">Featured Projects</h2>
                     <button onclick="showSection('projects')" class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View All &rarr;</button>
                 </div>
-                <!-- Changed to a 2x2 grid for better display of 4 items -->
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Mini Card 1 -->
                     <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">TinyML HAR</h3>
-                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Lightweight deep learning models for real-time human activity recognition deployed on edge devices (Arduino/ESP32).</p>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Kubernetes MLOps & Observability</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">End-to-end NLP pipeline featuring DVC data versioning, MLflow tracking, GitHub Actions CI/CD, AWS EKS deployment, and Prometheus/Grafana monitoring.</p>
                         <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
                     </div>
+
                     <!-- Mini Card 2 -->
                     <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Ridge Gourd Classifier</h3>
-                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">End-to-end DL pipeline classifying plant diseases, featuring a custom 9,000-image dataset published on IEEE DataPort.</p>
-                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Fasal Saathi AI App</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">End-to-end crop disease classification pipeline featuring two public datasets (IEEE/Mendeley) and a live Android application deployed on the Play Store.</p>
+                        <span class="text-emerald-500 text-xs font-semibold">Read details &rarr;</span>
                     </div>
+
                     <!-- Mini Card 3 -->
                     <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Real-Time Football Analytics</h3>
-                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Production-grade computer vision system utilizing YOLOv8 for live match analysis, tracking, and tactical heat maps.</p>
-                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">Vehicle Insurance MLOps</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Production-grade MLOps pipeline featuring automated model gating via AWS S3, zero-touch CI/CD deployment, and real-time FastAPI inference on EC2.</p>
+                        <span class="text-cyan-500 text-xs font-semibold">Read details &rarr;</span>
                     </div>
+
                     <!-- Mini Card 4 -->
                     <div class="bg-surface border border-border p-6 rounded-xl hover:border-gray-500 transition-colors cursor-pointer group" onclick="showSection('projects')">
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Fruit Classification</h3>
-                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">Deep learning model for automated fruit classification exploring preprocessing, augmentation, and transfer learning.</p>
-                        <span class="text-blue-500 text-xs font-semibold">Read details &rarr;</span>
+                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">MCQGyaan AI</h3>
+                        <p class="text-gray-400 text-sm mb-4 leading-relaxed">AI-powered EdTech platform featuring automated generation and context-aware semantic evaluation of handwritten answers using fine-tuned NLP models.</p>
+                        <span class="text-purple-500 text-xs font-semibold">Read details &rarr;</span>
                     </div>
-                </div>
+                </div> <!-- This was the missing closing div! -->
             </div>
 
             <!-- CORE RESEARCH INTERESTS (Detailed 6-block layout for Home Page) -->
@@ -339,36 +275,35 @@
             </div>
 
             <!-- Contact Section -->
-            <!-- Contact Section -->
-<h2 class="home-section-title text-white">Get In Touch</h2>
-<div class="contact-container flex flex-col md:flex-row justify-between gap-10">
-    
-    <!-- Left Side: Socials -->
-    <div class="flex-1">
-        <h3 class="text-2xl font-bold text-white mb-4">Let's Connect</h3>
-        <p class="text-gray-400 mb-8">Currently open to new opportunities, research collaborations, and open-source contributions. Drop a message!</p>
-        <div class="flex gap-6 text-3xl">
-            <a href="https://github.com/Param141" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/param-sharma-26949a2a3/" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-linkedin"></i></a>
-            <a href="https://x.com/ParamSharm72289" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.instagram.com/delusionallyoptimistic2/?hl=en" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-instagram"></i></a>
-        </div>
-    </div>
+            <h2 class="home-section-title text-white">Get In Touch</h2>
+            <div class="contact-container flex flex-col md:flex-row justify-between gap-10">
+                
+                <!-- Left Side: Socials -->
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold text-white mb-4">Let's Connect</h3>
+                    <p class="text-gray-400 mb-8">Currently open to new opportunities, research collaborations, and open-source contributions. Drop a message!</p>
+                    <div class="flex gap-6 text-3xl">
+                        <a href="https://github.com/Param141" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/param-sharma-26949a2a3/" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://x.com/ParamSharm72289" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/paramsharma2802/?hl=en" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
 
-    <!-- Right Side: Direct Email -->
-    <div class="flex-1 flex flex-col justify-center border-t md:border-t-0 md:border-l border-border pt-8 md:pt-0 md:pl-10">
-        <p class="text-gray-400 mb-3 font-medium uppercase tracking-wider text-sm">Email Me Directly</p>
-        
-        <a href="mailto:paramsharma802@gmail.com" class="text-2xl md:text-3xl font-bold text-white hover:text-blue-400 transition-colors break-words">
-            paramsharma802@gmail.com
-        </a>
-        
-        <a href="mailto:paramsharma802@gmail.com" class="mt-6 w-max bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-3 px-6 rounded transition-colors text-sm flex items-center shadow-lg shadow-blue-500/20">
-            <i class="fas fa-paper-plane mr-2"></i> Open Email App
-        </a>
-    </div>
-    
-</div>
+                <!-- Right Side: Direct Email -->
+                <div class="flex-1 flex flex-col justify-center border-t md:border-t-0 md:border-l border-border pt-8 md:pt-0 md:pl-10">
+                    <p class="text-gray-400 mb-3 font-medium uppercase tracking-wider text-sm">Email Me Directly</p>
+                    
+                    <a href="mailto:paramsharma802@gmail.com" class="text-2xl md:text-3xl font-bold text-white hover:text-blue-400 transition-colors break-words">
+                        paramsharma802@gmail.com
+                    </a>
+                    
+                    <a href="mailto:paramsharma802@gmail.com" class="mt-6 w-max bg-[#3b82f6] hover:bg-blue-600 text-white font-medium py-3 px-6 rounded transition-colors text-sm flex items-center shadow-lg shadow-blue-500/20">
+                        <i class="fas fa-paper-plane mr-2"></i> Open Email App
+                    </a>
+                </div>
+                
+            </div>
         </section>
 
         <!-- ============================================== -->
@@ -402,7 +337,7 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
                         <p class="text-sm text-gray-300 font-medium mb-4">Founder & Director, MaxBrain Technologies<br>Gopalpura, Rajasthan, India</p>
                         <p class="text-sm text-gray-400 mb-6 flex-1 leading-relaxed">Vikas Sharma is an engineering consultant and researcher with over 8 years of expertise in computational modeling. An alumnus of MNIT Jaipur, he specializes in bridging engineering principles with modern AI/ML applications. As a research mentor, he has overseen the development of multiple SOTA projects, including TinyML optimization, hybrid DL architectures, and industrial patents. With a prolific publication record in IEEE and Elsevier, he provides the academic oversight necessary to transition theoretical research into scalable, real-world solutions.</p>
                         <div class="flex flex-wrap gap-2">
-                            <a href="https://maxbraintech.com/" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-globe mr-1"></i> MaxBrain Technologies</button>
+                            <a href="https://maxbraintech.com/" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-globe mr-1"></i> MaxBrain Technologies</a>
                             <a href="https://orcid.org/0009-0009-4016-4441" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fas fa-link mr-1"></i> ORCID</a>
                             <a href="https://scholar.google.com/citations?user=9TgUIFkAAAAJ&hl=en" target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors"><i class="fab fa-google mr-1"></i> Google Scholar</a>
                         </div>
@@ -456,7 +391,7 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
                         <div class="flex-1">
                             <h3 class="text-lg font-bold text-white mb-2">Patent: AI-Assisted Method for Agricultural Leaf Disease Detection and Classification</h3>
                             <p class="text-sm text-gray-400 mb-4">Param Sharma · Indian Patent · Filed & Granted · 2025</p>
-                            <a href="Patent.pdf" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fas fa-scroll mr-2 text-red-400"></i> View Patent Document</a>
+                            <a href="Patent_Document.pdf" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300"><i class="fas fa-scroll mr-2 text-red-400"></i> View Patent Document</a>
                         </div>
                     </div>
 
@@ -466,7 +401,7 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
                         <div class="flex-1">
                             <h3 class="text-lg font-bold text-white mb-2">Conference Paper on Agricultural Leaf Disease Detection — MIND 2025</h3>
                             <p class="text-sm text-gray-400 mb-4">Param Sharma · MIND 2025 Conference · 2025 · DOI / Proceedings link to be updated (Currently in Press)</p>
-                            <a href="Certificate.jpeg" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fas fa-certificate mr-2 text-gray-400"></i> Certificate Link</a>
+                            <a href="MIND_2025_Certificate.pdf" target="_blank" class="bg-surface border border-border px-4 py-2 text-xs font-semibold rounded-md hover:bg-gray-800 transition-colors text-gray-300 mb-4"><i class="fas fa-certificate mr-2 text-gray-400"></i> Certificate Link</a>
                         </div>
                     </div>
 
@@ -541,7 +476,7 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
                         <i class="fas fa-newspaper text-3xl text-gray-400 mb-5"></i>
                         <h3 class="text-lg font-bold text-white mb-3">Punjab Kesari Newspaper</h3>
                         <p class="text-sm text-gray-400 mb-8 flex-1 leading-relaxed">Research work featured in Punjab Kesari, one of India's leading Hindi-language newspapers — recognising the contribution to agricultural AI research as an undergraduate student.</p>
-                        <a href="News.png" target="_blank" class="self-start bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-5 rounded-full text-xs transition-colors">View Clipping &rarr;</a>
+                        <a href="https://drive.google.com/file/d/1cpYztjJXZPUQX9gwtYN7P0q_kuQnHW21/view" target="_blank" class="self-start bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-5 rounded-full text-xs transition-colors">View Clipping &rarr;</a>
                     </div>
 
                     <!-- Recog 2 -->
@@ -570,8 +505,114 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
             <h2 class="text-3xl font-bold text-white mb-10">Projects</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+ <!-- Project 1 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-600"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Fasal Saathi — AI Crop Disease Classifier & App</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        An end-to-end deep learning ecosystem for agricultural disease detection. I collected, augmented, and published two major preprocessed datasets—Ridge Gourd (IEEE DataPort) and Brinjal/Eggplant (Mendeley Data). The optimized CNN pipeline is actively deployed in "Fasal Saathi," a live Android application on the Google Play Store helping farmers identify leaf diseases in real-time.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">PyTorch</span>
+                        <span class="proj-badge">CNN</span>
+                        <span class="proj-badge">Android</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fab fa-google-play mr-1"></i> Play Store App</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-database mr-1"></i> IEEE & Mendeley Datasets</span>
+                        <span class="proj-badge proj-badge-accent"><i class="fas fa-award mr-1"></i> Patent Granted</span>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://play.google.com/store/apps/details?id=com.param.finddiseaseai" target="_blank" class="proj-link-btn text-emerald-400 border-emerald-900 hover:border-emerald-400 hover:bg-emerald-900/20"><i class="fab fa-google-play mr-2"></i> Play Store</a>
+                        <a href="https://github.com/Param141/Machine_Learning_Agriculture_Project" target="_blank" class="proj-link-btn">GitHub</a>
+                        <a href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" class="proj-link-btn">IEEE DataPort</a>
+                        <a href="https://data.mendeley.com/datasets/c39p3k87g2/2" target="_blank" class="proj-link-btn">Mendeley Data</a>
+                    </div>
+                </div>
+
+
+<!-- Project 2 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <!-- Changed the top border color to a purple that matches the MCQGyaan branding -->
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-purple-500"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">MCQGyaan AI — Smart EdTech Platform</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        An enterprise-grade educational platform featuring an AI-driven answer evaluation system capable of analyzing both handwritten and typed responses. The core evaluation engine utilizes context-aware NLP models, fine-tuned on a custom-curated dataset to assess semantic meaning rather than simple keyword matching. It features automated question paper generation, real-time performance tracking, and role-based portals for students and educators.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">LLM Fine-Tuning</span>
+                        <span class="proj-badge">NLP</span>
+                        <span class="proj-badge">Custom Dataset</span>
+                        <span class="proj-badge">Computer Vision / OCR</span>
+                        <span class="proj-badge">Full-Stack AI</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://mocktest.maxbraintech.com" target="_blank" class="proj-link-btn">Visit Platform &rarr;</a>
+                    </div>
+                </div>
+
+
+
+<!-- Project 3 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-blue-600"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Cloud-Native MLOps & Observability Pipeline</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        An end-to-end, production-grade MLOps system for IMDb sentiment analysis. Orchestrates reproducible multi-stage DAG workflows via DVC and AWS S3. Features MLflow and DagsHub for experiment tracking, automated CI/CD quality gates via GitHub Actions, and containerized deployment to an AWS EKS (Kubernetes) cluster. Includes full-stack observability with custom Prometheus instrumentation and real-time Grafana dashboards.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">AWS EKS (Kubernetes)</span>
+                        <span class="proj-badge">Prometheus & Grafana</span>
+                        <span class="proj-badge">MLflow & DagsHub</span>
+                        <span class="proj-badge">DVC</span>
+                        <span class="proj-badge">GitHub Actions</span>
+                        <span class="proj-badge">NLP</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://github.com/Param141/IMDb-Sentiment-Analysis-MLOps" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
+                    </div>
+                </div>
+
+
+
+
                 
-                <!-- Project 1 -->
+
+<!-- Project 4 -->
+                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-cyan-600"></div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-3 pr-8">End-to-End MLOps Pipeline: Vehicle Insurance</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
+                        Architected a modular, production-grade MLOps pipeline to predict customer responses to vehicle insurance offers. The system features automated data ingestion from MongoDB Atlas, strict YAML schema validation, and leak-free preprocessing with SMOTEENN. Implemented automated model gating via AWS S3 and a zero-touch CI/CD pipeline using GitHub Actions, Docker, and AWS ECR/EC2 to serve real-time predictions via FastAPI.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="proj-badge">MLOps</span>
+                        <span class="proj-badge">AWS (EC2/S3/ECR)</span>
+                        <span class="proj-badge">Docker & CI/CD</span>
+                        <span class="proj-badge">FastAPI</span>
+                        <span class="proj-badge">MongoDB</span>
+                        <span class="proj-badge">Scikit-Learn</span>
+                    </div>
+                    
+                    <div class="flex">
+                        <a href="https://github.com/Param141/Vehicle_Insurance_Project_MLOPS" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
+                    </div>
+                </div>
+
+
+
+
+<!-- Project 5 -->
                 <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
                     <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-500"></div>
                     
@@ -595,75 +636,10 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
                     </div>
                 </div>
 
-                <!-- Project 2 -->
-                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
-                    <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-600"></div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Ridge Gourd Leaf Disease Classifier</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
-                        End-to-end deep learning pipeline classifying ridge gourd leaves as Healthy, Leaf Minor Infested, or Mosaic Virus infected. A dataset of 9,000 preprocessed images was collected, augmented, and published publicly on IEEE DataPort for the global research community.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="proj-badge">PyTorch</span>
-                        <span class="proj-badge">CNN</span>
-                        <span class="proj-badge">Python</span>
-                        <span class="proj-badge">OpenCV</span>
-                        <span class="proj-badge proj-badge-accent"><i class="fas fa-database mr-1"></i> IEEE DataPort Dataset</span>
-                        <span class="proj-badge proj-badge-accent"><i class="fas fa-award mr-1"></i> Patent Granted</span>
-                        <span class="proj-badge proj-badge-accent"><i class="fas fa-university mr-1"></i> MIND 2025 Conference Paper</span>
-                    </div>
-                    
-                    <div class="flex gap-3">
-                        <a href="https://github.com/Param141/Machine_Learning_Agriculture_Project" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
-                        <a href="https://ieee-dataport.org/documents/preprocessed-indian-ridge-gourd-leaf-image-dataset-healthy-and-diseased-leaf-minor" target="_blank" class="proj-link-btn">IEEE DataPort &rarr;</a>
-                    </div>
-                </div>
+               
+                             
 
-                <!-- Project 3 -->
-                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
-                    <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-600"></div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Deep Learning-Based Fruit Classification</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
-                        Deep learning model for automated fruit classification using convolutional neural networks. Explores preprocessing, augmentation strategies, and transfer learning to achieve robust classification across multiple fruit categories.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="proj-badge">PyTorch</span>
-                        <span class="proj-badge">CNN</span>
-                        <span class="proj-badge">Transfer Learning</span>
-                        <span class="proj-badge">Python</span>
-                        <span class="proj-badge">OpenCV</span>
-                    </div>
-                    
-                    <div class="flex">
-                        <a href="https://github.com/Param141/Deep_Learning_Based_Fruit_Classification" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
-                    </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
-                    <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-700"></div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-3 pr-8">Spotify Clone — Full-Stack Web App</h3>
-                    <p class="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">
-                        A fully functional Spotify-inspired music streaming UI built as part of a web development project collection. Features a responsive player interface, playlist management UI, and music browsing layout closely mirroring the original Spotify experience.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="proj-badge">HTML</span>
-                        <span class="proj-badge">CSS</span>
-                        <span class="proj-badge">JavaScript</span>
-                        <span class="proj-badge">Responsive Design</span>
-                    </div>
-                    
-                    <div class="flex">
-                        <a href="https://github.com/Param141/Web_Development_Projects/tree/main/spotify_clone" target="_blank" class="proj-link-btn">GitHub &rarr;</a>
-                    </div>
-                </div>
-
-                <!-- Project 5 -->
+                <!-- Project 6 -->
                 <div class="bg-surface rounded-xl p-8 relative overflow-hidden border border-border flex flex-col hover:-translate-y-1 transition-transform duration-300">
                     <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-400"></div>
                     
@@ -698,46 +674,6 @@ target="_blank" class="bg-background border border-border px-4 py-1.5 text-xs fo
 
     <!-- SCRIPTS -->
     <script>
-        // --- BOOT SEQUENCE TRIGGERED BY CLICK (Required by Browsers) ---
-        function startBootSequence() {
-            // 1. Hide button, show reactor
-            document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('reactor-container').style.display = 'flex';
-
-            // 2. Play Reactor Sound
-            try {
-                let reactorAudio = new Audio('Reactor.mp3');
-                reactorAudio.volume = 0.9; 
-                reactorAudio.play();
-            } catch(e) { console.log(e); }
-
-            // 3. Start Terminal Text Animation
-            const lines = document.querySelectorAll('.boot-text .line');
-            lines.forEach((line, index) => {
-                setTimeout(() => {
-                    line.style.opacity = '1';
-                    
-                    if(index === lines.length - 1) {
-                        // 4. Play Jarvis Voice
-                        try {
-                            let jarvisAudio = new Audio('Jarvis.mp3');
-                            jarvisAudio.volume = 1.0;
-                            jarvisAudio.play();
-                        } catch(e) { console.log(e); }
-                        
-                        // 5. Transition to main app
-                        setTimeout(() => {
-                            document.getElementById('boot-screen').style.opacity = '0';
-                            setTimeout(() => {
-                                document.getElementById('boot-screen').style.display = 'none';
-                                document.getElementById('app').style.display = 'block';
-                            }, 1000);
-                        }, 2500); 
-                    }
-                }, index * 500); 
-            });
-        }
-
         // --- NAVIGATION LOGIC ---
         function showSection(sectionId) {
             document.querySelectorAll('.section-content').forEach(sec => {
